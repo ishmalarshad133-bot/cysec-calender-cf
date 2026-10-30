@@ -11,16 +11,35 @@ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:en
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
 /* ---- themes (colors + fonts) ---- */
-body[data-theme=ethereal]{--page:radial-gradient(circle at 15% 10%,#fff 0,#fff0 45%),radial-gradient(circle at 85% 35%,#f1ecea 0,#f1ecea00 50%),linear-gradient(#e9e5e3,#f8f6f4);--panel:#ffffffaa;--text:#5a5250;--ink:#4a4240;--g:#8d7e7a;--g2:#c9bdb8;--dim:#a39792;--amber:#c7a46a;--pink:#d495a8;--line:#e2dad6;--soft:#ffffff99;--soft2:#ffffff;--glow:#d8cfcb;--field:#fffc;--cell:#ffffff88;--cC:#7f9ac4;--cF:#c9a227;--bshadow:0 4px 22px #00000012;--tshadow:none;--font:"Cormorant Garamond",Georgia,serif;--head:"Cormorant Garamond",Georgia,serif;--fs:17px;--h1:clamp(26px,5vw,38px);--rad:16px;--hanim:bob 7s ease-in-out infinite;--fxop:.8;--cs:light}
-body[data-theme=froggy]{--page:linear-gradient(90deg,#9db88a55 50%,#0000 50%),linear-gradient(#9db88a55 50%,#0000 50%),#f4f1dc;--psize:44px 44px;--panel:#f6f4e3ee;--text:#4b5f40;--ink:#3e5234;--g:#5f8a4f;--g2:#9db88a;--dim:#82967a;--amber:#d9a441;--pink:#e58fa8;--line:#c9d5b5;--soft:#9db88a22;--soft2:#9db88a44;--glow:#9db88a;--field:#fffd;--cell:#ffffff88;--cC:#5b8def;--cF:#d4a72c;--bshadow:0 3px 14px #6a8f5a22;--tshadow:none;--font:"Quicksand",system-ui,sans-serif;--head:"Pixelify Sans","Quicksand",sans-serif;--fs:14.5px;--h1:clamp(20px,4.5vw,30px);--rad:10px;--hanim:hop 2.6s ease-in-out infinite;--fxop:.85;--cs:light}
+body[data-theme=ethereal],body[data-theme=studycat]{--page:radial-gradient(circle at 15% 10%,#fff 0,#fff0 45%),radial-gradient(circle at 85% 35%,#f1ecea 0,#f1ecea00 50%),linear-gradient(#e9e5e3,#f8f6f4);--panel:#ffffffaa;--text:#5a5250;--ink:#4a4240;--g:#8d7e7a;--g2:#c9bdb8;--dim:#a39792;--amber:#c7a46a;--pink:#d495a8;--line:#e2dad6;--soft:#ffffff99;--soft2:#ffffff;--glow:#d8cfcb;--field:#fffc;--cell:#ffffff88;--cC:#7f9ac4;--cF:#c9a227;--bshadow:0 4px 22px #00000012;--tshadow:none;--font:"Cormorant Garamond",Georgia,serif;--head:"Cormorant Garamond",Georgia,serif;--fs:17px;--h1:clamp(26px,5vw,38px);--rad:16px;--hanim:bob 7s ease-in-out infinite;--fxop:.8;--cs:light}
+body[data-theme=froggy],body[data-theme=gingham],body[data-theme=sage]{--page:linear-gradient(90deg,#9db88a55 50%,#0000 50%),linear-gradient(#9db88a55 50%,#0000 50%),#f4f1dc;--psize:44px 44px;--panel:#f6f4e3ee;--text:#4b5f40;--ink:#3e5234;--g:#5f8a4f;--g2:#9db88a;--dim:#82967a;--amber:#d9a441;--pink:#e58fa8;--line:#c9d5b5;--soft:#9db88a22;--soft2:#9db88a44;--glow:#9db88a;--field:#fffd;--cell:#ffffff88;--cC:#5b8def;--cF:#d4a72c;--bshadow:0 3px 14px #6a8f5a22;--tshadow:none;--font:"Quicksand",system-ui,sans-serif;--head:"Pixelify Sans","Quicksand",sans-serif;--fs:14.5px;--h1:clamp(20px,4.5vw,30px);--rad:10px;--hanim:hop 2.6s ease-in-out infinite;--fxop:.85;--cs:light}
 body[data-theme=wisteria]{--page:radial-gradient(circle at 50% -10%,#ffffffee 0,#fff0 55%),linear-gradient(#e9f6e4,#f6fff2 55%,#dff0da);--panel:#ffffffb0;--text:#3d5a3f;--ink:#34503a;--g:#5a9468;--g2:#a9d0ae;--dim:#7f9f84;--amber:#d8b04a;--pink:#e39ab1;--line:#cfe6cf;--soft:#ffffff88;--soft2:#ffffff;--glow:#bfe3c0;--field:#fffd;--cell:#ffffff77;--cC:#6aa0d8;--cF:#cfae3a;--bshadow:0 4px 22px #5a946822;--tshadow:none;--font:"Nunito",system-ui,sans-serif;--head:"Cormorant Garamond",Georgia,serif;--fs:14.5px;--h1:clamp(26px,5vw,38px);--rad:18px;--hanim:bob 6s ease-in-out infinite;--fxop:.85;--cs:light}
 body[data-theme=midnight]{--page:radial-gradient(circle at 80% 8%,#2e2538 0,#2e253800 40%),linear-gradient(#08080d,#12101a);--panel:#14121bcc;--text:#eadfc8;--ink:#f1e6cf;--g:#e3bb72;--g2:#b8934d;--dim:#8c7d62;--amber:#ffd37a;--pink:#ff8fb0;--line:#3a3225;--soft:#e3bb7214;--soft2:#e3bb7230;--glow:#e3bb72;--field:#000a;--cell:#0000004d;--cC:#8ab4ff;--cF:#ffd37a;--bshadow:0 0 20px #e3bb7214;--tshadow:0 0 14px #e3bb7266;--font:"Cormorant Garamond",Georgia,serif;--head:"Cinzel",Georgia,serif;--fs:17px;--h1:clamp(20px,4.5vw,30px);--rad:10px;--hanim:glow 5s ease-in-out infinite;--fxop:.85;--cs:dark}
-body[data-theme=notebook]{--page:linear-gradient(#8aa0c855 1px,#0000 1px),linear-gradient(90deg,#8aa0c855 1px,#0000 1px),#f7f4e9;--psize:26px 26px;--panel:#ffffffcc;--text:#34486d;--ink:#2c3f63;--g:#3f5b8c;--g2:#7f9acb;--dim:#8396b6;--amber:#e0a030;--pink:#e0708f;--line:#c5d1e8;--soft:#3f5b8c14;--soft2:#3f5b8c2c;--glow:#7f9acb;--field:#fffe;--cell:#ffffffaa;--cC:#3f8fd8;--cF:#d9a520;--bshadow:0 3px 14px #3f5b8c1c;--tshadow:none;--font:"Patrick Hand",system-ui,sans-serif;--head:"Caveat","Patrick Hand",cursive;--fs:16px;--h1:clamp(30px,6vw,44px);--rad:12px;--hanim:wobble 6s ease-in-out infinite;--fxop:.85;--cs:light}
+body[data-theme=notebook],body[data-theme=sky],body[data-theme=lifemax]{--page:linear-gradient(#8aa0c855 1px,#0000 1px),linear-gradient(90deg,#8aa0c855 1px,#0000 1px),#f7f4e9;--psize:26px 26px;--panel:#ffffffcc;--text:#34486d;--ink:#2c3f63;--g:#3f5b8c;--g2:#7f9acb;--dim:#8396b6;--amber:#e0a030;--pink:#e0708f;--line:#c5d1e8;--soft:#3f5b8c14;--soft2:#3f5b8c2c;--glow:#7f9acb;--field:#fffe;--cell:#ffffffaa;--cC:#3f8fd8;--cF:#d9a520;--bshadow:0 3px 14px #3f5b8c1c;--tshadow:none;--font:"Patrick Hand",system-ui,sans-serif;--head:"Caveat","Patrick Hand",cursive;--fs:16px;--h1:clamp(30px,6vw,44px);--rad:12px;--hanim:wobble 6s ease-in-out infinite;--fxop:.85;--cs:light}
 body[data-theme=totoro]{--page:repeating-linear-gradient(120deg,#0000 0 34px,#6a9a6422 34px 40px),#efe6cf;--psize:auto;--panel:#f8f1dcdd;--text:#45483a;--ink:#3c4030;--g:#5d8a57;--g2:#8fb287;--dim:#8f9a7d;--amber:#d99a3d;--pink:#d9788c;--line:#d6cfae;--soft:#5d8a5718;--soft2:#5d8a5733;--glow:#9bbf94;--field:#fffc;--cell:#ffffff77;--cC:#6a9ac4;--cF:#d9a520;--bshadow:0 3px 14px #5d8a5722;--tshadow:none;--font:"Fredoka",system-ui,sans-serif;--head:"Caveat",cursive;--fs:14.5px;--h1:clamp(30px,6vw,44px);--rad:18px;--hanim:bob 5s ease-in-out infinite;--fxop:.9;--cs:light}
-body[data-theme=jiji]{--page:radial-gradient(ellipse at 8% 18%,#000 0 11%,#0000 12%),radial-gradient(ellipse at 94% 82%,#000 0 13%,#0000 14%),repeating-radial-gradient(circle at 50% 40%,#808080 0 30px,#767676 30px 60px);--panel:#101010d6;--text:#f0f0f0;--ink:#fff;--g:#ffffff;--g2:#bdbdbd;--dim:#a8a8a8;--amber:#ffb3b3;--pink:#ff6f7f;--line:#444;--soft:#ffffff14;--soft2:#ffffff30;--glow:#ffffff;--field:#000a;--cell:#00000066;--cC:#9cc8ff;--cF:#ffe27a;--bshadow:0 0 18px #ffffff12;--tshadow:0 0 10px #ffffff55;--font:"Fredoka",system-ui,sans-serif;--head:"Fredoka",system-ui,sans-serif;--fs:14.5px;--h1:clamp(20px,4.5vw,30px);--rad:18px;--hanim:wobble 5s ease-in-out infinite;--fxop:.9;--cs:dark}
+body[data-theme=jiji],body[data-theme=storm]{--page:radial-gradient(ellipse at 8% 18%,#000 0 11%,#0000 12%),radial-gradient(ellipse at 94% 82%,#000 0 13%,#0000 14%),repeating-radial-gradient(circle at 50% 40%,#808080 0 30px,#767676 30px 60px);--panel:#101010d6;--text:#f0f0f0;--ink:#fff;--g:#ffffff;--g2:#bdbdbd;--dim:#a8a8a8;--amber:#ffb3b3;--pink:#ff6f7f;--line:#444;--soft:#ffffff14;--soft2:#ffffff30;--glow:#ffffff;--field:#000a;--cell:#00000066;--cC:#9cc8ff;--cF:#ffe27a;--bshadow:0 0 18px #ffffff12;--tshadow:0 0 10px #ffffff55;--font:"Fredoka",system-ui,sans-serif;--head:"Fredoka",system-ui,sans-serif;--fs:14.5px;--h1:clamp(20px,4.5vw,30px);--rad:18px;--hanim:wobble 5s ease-in-out infinite;--fxop:.9;--cs:dark}
 body[data-theme=chalk]{--page:radial-gradient(circle at 30% 20%,#2c3a34 0,#2c3a3400 60%),#1d2824;--panel:#16201cdd;--text:#eef3ea;--ink:#fff;--g:#fff3b8;--g2:#9fb5a8;--dim:#8fa89a;--amber:#ffd966;--pink:#ff9aa8;--line:#3d4f46;--soft:#ffffff10;--soft2:#ffffff26;--glow:#ffffff;--field:#0008;--cell:#0000003a;--cC:#8fd0ff;--cF:#ffe27a;--bshadow:0 0 14px #ffffff10;--tshadow:0 0 8px #ffffff44;--font:"Patrick Hand",system-ui,sans-serif;--head:"Schoolbell","Patrick Hand",cursive;--fs:16px;--h1:clamp(22px,4.8vw,32px);--rad:6px;--hanim:glow 5s ease-in-out infinite;--fxop:.8;--cs:dark}
+/* ---- your wallpapers as backgrounds ---- */
+body[data-theme=ethereal]{--page:linear-gradient(#ffffff40,#ffffff40),url(bg/ethereal.jpg);--psize:cover;--rep:no-repeat;--ppos:center;--att:fixed;--panel:#ffffffcc}
+body[data-theme=froggy]{--page:linear-gradient(#ffffff33,#ffffff33),url(bg/froggy.jpg);--psize:cover;--rep:no-repeat;--ppos:center;--att:fixed;--panel:#fbfaf0e6}
+body[data-theme=wisteria]{--page:linear-gradient(#ffffff22,#ffffff22),url(bg/wisteria.jpg);--psize:cover;--rep:no-repeat;--ppos:center;--att:fixed;--panel:#ffffffcc}
+body[data-theme=midnight]{--page:linear-gradient(#00000040,#00000040),url(bg/midnight.jpg);--psize:cover;--rep:no-repeat;--ppos:center;--att:fixed;--panel:#10101acc}
+body[data-theme=gingham]{--page:linear-gradient(#ffffff22,#ffffff22),url(bg/gingham.jpg);--psize:cover;--rep:no-repeat;--ppos:center;--att:fixed;--panel:#fbfaf0e6}
+body[data-theme=notebook]{--page:linear-gradient(#ffffff33,#ffffff33),url(bg/notebook.jpg);--psize:cover;--rep:no-repeat;--ppos:center;--att:fixed;--panel:#fffffff0}
+body[data-theme=lifemax]{--page:linear-gradient(#ffffff44,#ffffff44),url(bg/lifemax.jpg);--psize:cover;--rep:no-repeat;--ppos:center;--att:fixed;--panel:#fffdf5ee}
+body[data-theme=jiji]{--page:linear-gradient(#00000030,#00000030),url(bg/jiji.jpg);--psize:cover;--rep:no-repeat;--ppos:center;--att:fixed;--panel:#101010e0}
+body[data-theme=totoro]{--page:linear-gradient(#ffffff22,#ffffff22),url(bg/totoro.jpg);--psize:cover;--rep:no-repeat;--ppos:center;--att:fixed;--panel:#f9f3e0e6}
+body[data-theme=storm]{--page:linear-gradient(#00000066,#00000066),url(bg/storm.jpg);--psize:cover;--rep:no-repeat;--ppos:center;--att:fixed;--panel:#101418e0}
+body[data-theme=sky]{--page:linear-gradient(#00000010,#00000010),url(bg/sky.jpg);--psize:cover;--rep:no-repeat;--ppos:center;--att:fixed;--panel:#ffffffe6}
+body[data-theme=studycat]{--page:linear-gradient(#ffffff00,#ffffff00),url(bg/studycat.jpg);--psize:cover;--rep:no-repeat;--ppos:center;--att:fixed;--panel:#ffffffe6}
+body[data-theme=chalk]{--page:linear-gradient(#00000066,#00000066),url(bg/chalk.jpg);--psize:cover;--rep:no-repeat;--ppos:center;--att:fixed;--panel:#141c19e6}
+body[data-theme=sage]{--page:linear-gradient(#ffffff44,#ffffff44),url(bg/sage.jpg);--psize:cover;--rep:no-repeat;--ppos:center;--att:fixed;--panel:#fbfaf0eb}
+body[data-theme=lifemax]{--text:#2b2b2b;--ink:#1c1c1c;--g:#1c1c1c;--g2:#8a8a8a;--dim:#7a7a7a;--font:"Cormorant Garamond",Georgia,serif;--head:"Cormorant Garamond",Georgia,serif;--fs:17px;--h1:clamp(28px,5.5vw,42px);--hanim:bob 6s ease-in-out infinite}
+body[data-theme=storm]{--font:"Quicksand",system-ui,sans-serif;--head:"Quicksand",system-ui,sans-serif;--g2:#9fb0c4;--amber:#ffd37a;--pink:#ff9ab0;--hanim:bob 7s ease-in-out infinite}
+body[data-theme=studycat]{--font:"Patrick Hand",system-ui,sans-serif;--head:"Caveat",cursive;--fs:16px;--h1:clamp(30px,6vw,44px);--g:#555;--g2:#aaa;--text:#444;--hanim:wobble 5s ease-in-out infinite}
+body[data-theme=gingham],body[data-theme=sage]{--hanim:hop 2.6s ease-in-out infinite}
 /* ---- layout ---- */
-body{margin:0;background:var(--page);background-size:var(--psize);color:var(--text);font:var(--fs)/1.5 var(--font);color-scheme:var(--cs);min-height:100vh;overflow-x:hidden;transition:background-color .4s}
+body{margin:0;background:var(--page);background-size:var(--psize);background-repeat:var(--rep,repeat);background-position:var(--ppos,0 0);background-attachment:var(--att,scroll);color:var(--text);font:var(--fs)/1.5 var(--font);color-scheme:var(--cs);min-height:100vh;overflow-x:hidden;transition:background-color .4s}
 body[data-theme=hacker]::after{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,#0000 0 2px,#00000030 2px 3px);z-index:50}
 #rain{position:fixed;inset:0;z-index:0;opacity:.28}
 body:not([data-theme=hacker]) #rain{display:none}
@@ -44,6 +63,8 @@ body:not([data-theme=hacker]) .cur{display:none}
 .badge{display:inline-block;border:1px solid var(--amber);color:var(--amber);padding:1px 8px;border-radius:3px;font-size:.85em;margin-left:8px}
 .badge.ro{border-color:var(--dim);color:var(--dim)}
 .box{background:var(--panel);border:1px solid var(--line);border-radius:var(--rad);padding:14px;margin-bottom:16px;backdrop-filter:blur(3px);box-shadow:var(--bshadow)}
+body.clear .box{background:color-mix(in srgb,var(--panel) 48%,transparent);backdrop-filter:blur(2px)}
+.hd{padding:10px 14px}.hd .bar{margin-bottom:2px}.hd p{margin:4px 0}
 .box>b{font-family:var(--head);font-size:1.1em;color:var(--g)}
 .bar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
 button{font:inherit;color:var(--g);background:var(--soft);border:1px solid var(--g2);border-radius:5px;padding:5px 11px;cursor:pointer;transition:transform .15s,box-shadow .2s}
@@ -84,6 +105,7 @@ a.ab{display:inline-block;color:var(--g);border:1px solid var(--g2);border-radiu
 <script>
 const $=s=>document.querySelector(s);
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let showLogin=false;
 let S={events:{},polls:[],files:[]},votes=[],canEdit=false,editKey='',last='';
 const db=true;
 let voter;try{voter=localStorage.getItem('vid');if(!voter){voter=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now());localStorage.setItem('vid',voter)}}catch(e){voter='anon-'+Math.random().toString(36).slice(2)+Date.now()}
@@ -108,10 +130,16 @@ const THEMES={
  froggy:{n:'🐸 Froggy',title:'CySec Academic Calendar',sub:'ribbit… study time 🐸',p:'',fx:{mode:'fly',items:['🐸','🌿','🦋','⭐','🐰','🍃','💚','🌱']}},
  wisteria:{n:'🌿 Wisteria',title:'CySec Academic Calendar',sub:'soft light, calm mind 🌿',p:'',fx:{mode:'fall',items:['🍃','🤍','🌿','🤍','🍃','🌸','🤍']}},
  midnight:{n:'🌙 Midnight',title:'CySec Academic Calendar',sub:'written in the stars ✨',p:'',fx:{mode:'fly',items:['🌙','✨','☁️','⭐','🌟','☁️'],stars:true}},
+ gingham:{n:'🧺 Gingham',title:'CySec Academic Calendar',sub:'picnic energy 🧺',p:'',fx:{mode:'fly',items:['🐰','🌿','🍓','🦋','🌼','🍃']}},
  notebook:{n:'🐋 Notebook',title:'CySec Academic Calendar',sub:'life goes on ☁️ you can do it',p:'',fx:{mode:'fly',items:['🐋','🎀','☁️','⭐','🩵','✏️','🐳']}},
- totoro:{n:'🍃 Totoro',title:'CySec Academic Calendar',sub:'a little forest of deadlines 🌱',p:'',fx:{mode:'fall',items:['🍃','🌰','🌱','⭐','🍄','🍃','☁️']}},
+ lifemax:{n:'🎯 Lifemaxxing',title:'CySec Academic Calendar',sub:'comparison is the thief of joy',p:'',fx:{mode:'fly',items:['🏸','📚','✏️','🎯','⭐','📷','🧸']}},
  jiji:{n:'🐈‍⬛ Jiji',title:'CySec Academic Calendar',sub:'delivering your deadlines 🖤',p:'',fx:{mode:'fly',items:['🐈‍⬛','✨','⚫','🖤','🌙','⭐'],stars:true}},
- chalk:{n:'🧮 Chalkboard',title:'CySec Academic Calendar',sub:'calculating… 🐱',p:'',fx:{mode:'fly',items:['π','Σ','∫','√x','∞','E=mc²','🐱','🧮','☕','Δ']}}
+ totoro:{n:'🍃 Totoro',title:'CySec Academic Calendar',sub:'a little forest of deadlines 🌱',p:'',fx:{mode:'fall',items:['🍃','🌰','🌱','⭐','🍄','🍃','☁️']}},
+ storm:{n:'🌊 Storm',title:'CySec Academic Calendar',sub:'steady through the waves 🌊',p:'',fx:{mode:'fly',items:['🌊','🎧','☁️','🌀','⭐']}},
+ sky:{n:'☁️ Life Goes On',title:'CySec Academic Calendar',sub:'you can do it 🩵',p:'',fx:{mode:'fly',items:['☁️','🩵','✈️','⭐','🧸','🌤️']}},
+ studycat:{n:'🐱 Study Cat',title:'CySec Academic Calendar',sub:'send help (and snacks) 🐱',p:'',fx:{mode:'fly',items:['🐱','💻','📎','☕','✨','📄']}},
+ chalk:{n:'🧮 Chalkboard',title:'CySec Academic Calendar',sub:'calculating… 🐱',p:'',fx:{mode:'fly',items:['π','Σ','∫','√x','∞','E=mc²','🐱','🧮','☕','Δ']}},
+ sage:{n:'🌱 Sage',title:'CySec Academic Calendar',sub:'soft green study desk 🌱',p:'',fx:{mode:'fly',items:['🦋','🐰','🍃','🌿','🐸','🌼']}}
 };
 let theme='hacker';try{theme=localStorage.getItem('theme')||'hacker'}catch(e){}if(!THEMES[theme])theme='hacker';
 function buildFx(){const fx=$('#fx');fx.innerHTML='';const c=THEMES[theme].fx;
@@ -139,6 +167,7 @@ const fileUrl=f=>'/f/'+f.id+'/'+encodeURIComponent(f.name);
 const fileBits=e=>e.file?` <a href="${fileUrl(e.file)}" target="_blank" rel="noopener">📎 ${esc(e.file.name)}</a> <button data-cp="${fileUrl(e.file)}">copy link</button> <a class="ab" href="${fileUrl(e.file)}?dl=1" download>download</a>`:'';
 function render(){
   const T=THEMES[theme];
+  const loginRow=(!canEdit&&showLogin)?`<div class="row"><input id="lp" type="password" placeholder="editor password" autocomplete="current-password"><button id="lgo">log in</button></div>`:'';
   const y=cur.getFullYear(),m=cur.getMonth(),first=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate(),today=key(new Date());
   let cells='',mt=0,md=0;
   for(let i=0;i<first;i++)cells+='<div class="d o"></div>';
@@ -154,9 +183,9 @@ function render(){
     ${p.opts.map(o=>{const c=vs.filter(v=>v.answers[p.id]===o).length;return `<button class="opt ${mine?.answers?.[p.id]===o?'me':''}" data-p="${p.id}" data-o="${esc(o)}"><i style="width:${vs.length?c/vs.length*100:0}%"></i>${esc(o)}<span>${c}</span></button>`}).join('')}
     <p class="dim">${vs.length} vote${vs.length===1?'':'s'}${vs.length?' — '+vs.map(v=>esc(v.name)).join(', '):''}</p></div>`}).join('');
   $('#app').innerHTML=`
-  <div class="bar"><h1>${esc(T.title)}<span class="cur"></span></h1><select id="th" title="theme">${Object.entries(THEMES).map(([k,v])=>`<option value="${k}" ${k===theme?'selected':''}>${v.n}</option>`).join('')}</select></div>
+  <header class="box hd"><div class="bar"><h1>${esc(T.title)}<span class="cur"></span></h1><span style="display:flex;gap:6px;align-items:center">${canEdit?'<button id="lo">log out</button>':'<button id="lg">🔑 editor login</button>'}<button id="cl" title="show more of the wallpaper">🖼️</button><select id="th" title="theme">${Object.entries(THEMES).map(([k,v])=>`<option value="${k}" ${k===theme?'selected':''}>${v.n}</option>`).join('')}</select></span></div>${loginRow}
   <p class="sub">${esc(T.sub)} ${canEdit?'<span class="badge">EDIT MODE</span>':'<span class="badge ro">VIEW ONLY</span>'}</p>
-  <p class="dim">${Object.entries(CATS).map(([k,v])=>v+' '+k).join(' &nbsp; ')}</p>
+  <p class="dim">${Object.entries(CATS).map(([k,v])=>v+' '+k).join(' &nbsp; ')}</p></header>
   <section class="box"><div class="bar"><button id="pv">&lt; prev</button><b>${cur.toLocaleString('en',{month:'long'}).toUpperCase()} ${y}</b><button id="nx">next &gt;</button></div>
    <div class="grid">${['SUN','MON','TUE','WED','THU','FRI','SAT'].map(d=>`<div class="dow">${d}</div>`).join('')}${cells}</div></section>
   <section class="box"><b>${T.p}${sel}</b>
@@ -170,6 +199,10 @@ function render(){
    ${canEdit?`<div class="poll"><button id="np">+ add poll</button>${draft?`<div class="row"><input id="dq" placeholder="poll question" value="${esc(draft.q)}"></div>${draft.opts.map((o,i)=>`<div class="row"><input data-do="${i}" placeholder="option ${i+1}" value="${esc(o)}"></div>`).join('')}<div class="row"><button id="ao">+ option</button><button id="sp">publish poll</button><button id="cp" class="x">cancel</button></div>`:''}</div>`:''}</section>
   <p class="dim">${canEdit?'You are an editor: changes publish for everyone.':'Only invited editors can change plans.'} ☕</p>`;
   $('#th').onchange=e=>{e.target.blur();applyTheme(e.target.value);render()};
+  $('#cl').onclick=()=>{const on=document.body.classList.toggle('clear');try{localStorage.setItem('clear',on?'1':'0')}catch(e){}};
+  if($('#lg'))$('#lg').onclick=()=>{showLogin=!showLogin;render();if($('#lp'))$('#lp').focus()};
+  if($('#lo'))$('#lo').onclick=()=>{try{localStorage.removeItem('ek')}catch(e){}editKey='';canEdit=false;render()};
+  if($('#lgo')){const go=async()=>{const k=$('#lp').value;if(!k)return;try{const r=await api({action:'auth',key:k});if(!r.ok)return alert('Wrong password.');editKey=k;canEdit=true;showLogin=false;try{localStorage.setItem('ek',k)}catch(e){}render()}catch(e){alert('Login failed: '+(e.message==='404'?'the server part is not deployed (functions folder missing)':e.message))}};$('#lgo').onclick=go;$('#lp').onkeydown=e=>{if(e.key==='Enter')go()}}
   $('#pv').onclick=()=>{cur.setMonth(m-1);render()};$('#nx').onclick=()=>{cur.setMonth(m+1);render()};
   document.querySelectorAll('.d[data-k]').forEach(el=>el.onclick=()=>{sel=el.dataset.k;render()});
   document.querySelectorAll('[data-cp]').forEach(b=>b.onclick=async()=>{const u=/^https?:/.test(b.dataset.cp)?b.dataset.cp:location.origin+b.dataset.cp;try{await navigator.clipboard.writeText(u);b.textContent='copied!'}catch(e){prompt('Copy this link:',u)}});
@@ -193,6 +226,7 @@ function render(){
 function localStorageGet(k){try{return localStorage.getItem(k)||''}catch(e){return ''}}
 function localStorageSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 
+try{if(localStorage.getItem('clear')==='1')document.body.classList.add('clear')}catch(e){}
 applyTheme(theme);render();
 (async()=>{
   const h=location.hash.match(/edit=([^&]+)/);
