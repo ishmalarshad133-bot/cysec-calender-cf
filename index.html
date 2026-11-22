@@ -64,7 +64,7 @@ body:not([data-theme=hacker]) .cur{display:none}
 .badge.ro{border-color:var(--dim);color:var(--dim)}
 .box{background:var(--panel);border:1px solid var(--line);border-radius:var(--rad);padding:14px;margin-bottom:16px;backdrop-filter:blur(3px);box-shadow:var(--bshadow)}
 body.clear .box{background:color-mix(in srgb,var(--panel) 48%,transparent);backdrop-filter:blur(2px)}
-.hd{padding:10px 14px}.hd .bar{margin-bottom:2px}.hd p{margin:4px 0}
+.hd{padding:10px 14px}.hd .bar{margin-bottom:2px;flex-wrap:wrap}.hd p{margin:4px 0}
 .box>b{font-family:var(--head);font-size:1.1em;color:var(--g)}
 .bar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
 button{font:inherit;color:var(--g);background:var(--soft);border:1px solid var(--g2);border-radius:5px;padding:5px 11px;cursor:pointer;transition:transform .15s,box-shadow .2s}
@@ -94,6 +94,40 @@ a.ab{display:inline-block;color:var(--g);border:1px solid var(--g2);border-radiu
 .prog{height:12px;border:1px solid var(--g2);border-radius:6px;overflow:hidden;margin:6px 0}.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--g2),var(--g));transition:width .6s}
 .done{text-decoration:line-through;opacity:.5}
 .poll{border-top:1px dashed var(--line);margin-top:12px;padding-top:10px}
+/* ---- welcome splash ---- */
+body.splash{overflow:hidden;height:100vh}
+body.splash main,body.splash #fx{visibility:hidden}
+#splash{position:fixed;inset:0;z-index:100;display:flex;padding:16px;overflow-y:auto;overflow-x:hidden}
+#splash.gone{display:none}
+#splash.out{animation:spFade .35s ease-in forwards}
+#splash.out .sp-win{animation:spOut .35s ease-in forwards}
+.sp-wrap{margin:auto;width:min(92vw,400px);display:flex;flex-direction:column;align-items:stretch}
+.sp-row{display:flex;justify-content:center;gap:2px;position:relative;z-index:2;pointer-events:none}
+#sp-top{margin-bottom:-12px}#sp-bot{margin-top:-12px}
+.sp-st{display:block;width:clamp(40px,12.5vw,66px);flex:none;animation:spIn .55s cubic-bezier(.2,1.5,.4,1) calc(.45s + var(--i)*.07s) both}
+.sp-st img{display:block;width:100%;height:auto;transform:rotate(var(--r,0deg));filter:drop-shadow(0 3px 5px #0004);animation:spBob 3.8s ease-in-out calc(1.2s + var(--i)*.35s) infinite}
+.sp-st:nth-child(even){margin-top:8px}
+#sp-bot .sp-st:nth-child(even){margin-top:0;margin-bottom:8px}
+.sp-win{position:relative;z-index:1;background:var(--panel);border:1px solid var(--line);border-radius:var(--rad);box-shadow:var(--bshadow),0 18px 50px #0004;backdrop-filter:blur(6px);overflow:hidden;animation:spPop .7s cubic-bezier(.2,1.3,.4,1) both}
+.sp-bar{display:flex;align-items:center;gap:6px;padding:8px 12px;border-bottom:1px solid var(--line);background:var(--soft);color:var(--dim);font-size:.8em}
+.sp-bar i{width:10px;height:10px;border-radius:50%;display:block;flex:none}
+.sp-bar i:nth-child(1){background:var(--pink)}.sp-bar i:nth-child(2){background:var(--amber)}.sp-bar i:nth-child(3){background:var(--g)}
+.sp-bar span{flex:1;text-align:center;margin-right:42px}
+.sp-body{padding:22px 20px 18px;text-align:center}
+.sp-logo{display:block;width:min(200px,55vw);height:auto;margin:0 auto;border-radius:22px;box-shadow:0 6px 20px #0003}
+.sp-sub{color:var(--dim);margin:12px 0 0}
+.sp-by{margin:16px 0 16px;padding-top:14px;border-top:1px dashed var(--line);color:var(--ink);font-size:.92em;line-height:1.7}
+.sp-by b{color:var(--amber);font-weight:700}
+.sp-btn{font-size:1.1em;padding:9px 38px;animation:spPulse 2s ease-in-out infinite}
+.sp-link{display:block;margin:12px auto 0;background:none;border:0;border-bottom:1px dashed var(--g2);border-radius:0;color:var(--dim);padding:2px 4px;box-shadow:none}
+.sp-link:hover{background:none;color:var(--g);box-shadow:none;transform:none}
+@keyframes spPop{0%{opacity:0;transform:translateY(40px) scale(.6)}100%{opacity:1;transform:none}}
+@keyframes spOut{to{opacity:0;transform:translateY(-20px) scale(.9)}}
+@keyframes spFade{to{opacity:0}}
+@keyframes spIn{0%{opacity:0;transform:scale(.2) translateY(14px)}100%{opacity:1;transform:none}}
+@keyframes spBob{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-4px) rotate(var(--r,0deg))}}
+@keyframes spPulse{0%,100%{box-shadow:0 0 0 0 transparent}50%{box-shadow:0 0 16px 2px var(--glow)}}
+@media(prefers-reduced-motion:reduce){.sp-st,.sp-st img,.sp-btn,.sp-win{animation:none}}
 .tbl{width:100%;border-collapse:collapse;font-size:.85em;margin-top:8px}
 .tbl th,.tbl td{border-bottom:1px dashed var(--line);padding:5px 6px;text-align:left;vertical-align:top}
 .tbl th{color:var(--dim);font-weight:500}
@@ -102,9 +136,25 @@ button:disabled{opacity:.45;cursor:default;transform:none;box-shadow:none}
 @media(prefers-reduced-motion:reduce){.fl,.st,.cur,h1{animation:none}#rain{display:none}}
 </style>
 </head>
-<body data-theme="hacker">
+<body data-theme="hacker" class="splash">
 <canvas id="rain"></canvas>
 <div id="fx"></div>
+<div id="splash" role="dialog" aria-modal="true" aria-label="Parh Lein welcome">
+  <div class="sp-wrap">
+    <div class="sp-row" id="sp-top" aria-hidden="true"></div>
+    <div class="sp-win">
+      <div class="sp-bar" aria-hidden="true"><i></i><i></i><i></i><span>CySec Academic Calendar</span></div>
+      <div class="sp-body">
+        <img class="sp-logo" src="stickers/logo.jpg" alt="Parh Lein">
+        <p class="sp-sub" id="sp-sub"></p>
+        <div class="sp-by">Made By: <b>Ishmal Arshad</b><br><b>Ahmed Khurram</b></div>
+        <button id="sp-go" class="sp-btn" type="button">Sign in</button>
+        <button id="sp-home" class="sp-link" type="button">Go to home page &rarr;</button>
+      </div>
+    </div>
+    <div class="sp-row" id="sp-bot" aria-hidden="true"></div>
+  </div>
+</div>
 <main id="app"></main>
 <script>
 const $=s=>document.querySelector(s);
@@ -224,7 +274,7 @@ function render(){
     ${p.opts.map(o=>{const c=vs.filter(v=>v.answers[p.id]===o).length;return `<button class="opt ${mine?.answers?.[p.id]===o?'me':''}" data-p="${p.id}" data-o="${esc(o)}"><i style="width:${vs.length?c/vs.length*100:0}%"></i>${esc(o)}<span>${c}</span></button>`}).join('')}
     <p class="dim">${vs.length} vote${vs.length===1?'':'s'}${vs.length?' — '+vs.map(v=>esc(v.name)).join(', '):''}</p></div>`}).join('');
   $('#app').innerHTML=`
-  <header class="box hd"><div class="bar"><h1>${esc(T.title)}<span class="cur"></span></h1><span style="display:flex;gap:6px;align-items:center">${canEdit?'<button id="lo">log out</button>':'<button id="lg">🔑 editor login</button>'}<button id="cl" title="show more of the wallpaper">🖼️</button><select id="th" title="theme">${Object.entries(THEMES).map(([k,v])=>`<option value="${k}" ${k===theme?'selected':''}>${v.n}</option>`).join('')}</select></span></div>${loginRow}
+  <header class="box hd"><div class="bar"><h1>${esc(T.title)}<span class="cur"></span></h1><span style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end"><button id="wl" title="back to the welcome screen">← welcome</button>${canEdit?'<button id="lo">log out</button>':'<button id="lg">🔑 editor login</button>'}<button id="cl" title="show more of the wallpaper">🖼️</button><select id="th" title="theme">${Object.entries(THEMES).map(([k,v])=>`<option value="${k}" ${k===theme?'selected':''}>${v.n}</option>`).join('')}</select></span></div>${loginRow}
   <p class="sub">${esc(T.sub)} ${canEdit?'<span class="badge">EDIT MODE</span>':'<span class="badge ro">VIEW ONLY</span>'}</p>
   <p class="dim">${Object.entries(CATS).map(([k,v])=>v+' '+k).join(' &nbsp; ')}</p></header>
   <section class="box"><div class="bar"><button id="pv">&lt; prev</button><b>${cur.toLocaleString('en',{month:'long'}).toUpperCase()} ${y}</b><button id="nx">next &gt;</button></div>
@@ -240,6 +290,7 @@ function render(){
    ${db?`<div class="row"><input id="nm" placeholder="your name (needed to vote)" maxlength="30" value="${esc(mine?.name||localStorageGet('nm'))}"></div>${pollHTML||'<p class="dim">no polls yet.</p>'}`:`<p class="dim">loading…</p>`}
    ${canEdit?`<div class="poll"><button id="np">+ add poll</button>${draft?`<div class="row"><input id="dq" placeholder="poll question" value="${esc(draft.q)}"></div>${draft.opts.map((o,i)=>`<div class="row"><input data-do="${i}" placeholder="option ${i+1}" value="${esc(o)}"></div>`).join('')}<div class="row"><button id="ao">+ option</button><button id="sp">publish poll</button><button id="cp" class="x">cancel</button></div>`:''}</div>`:''}</section>
   <p class="dim">${canEdit?'You are an editor: changes publish for everyone.':'Only invited editors can change plans.'} ☕</p>`;
+  $('#wl').onclick=openSplash;
   $('#th').onchange=e=>{e.target.blur();applyTheme(e.target.value);render()};
   $('#cl').onclick=()=>{const on=document.body.classList.toggle('clear');try{localStorage.setItem('clear',on?'1':'0')}catch(e){}};
   if($('#lg'))$('#lg').onclick=()=>{showLogin=!showLogin;render();if($('#lp'))$('#lp').focus()};
@@ -271,6 +322,21 @@ function localStorageSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 
 try{if(localStorage.getItem('clear')==='1')document.body.classList.add('clear')}catch(e){}
 applyTheme(theme);render();
+// ---------- welcome splash ----------
+function buildSplash(){
+  $('#sp-sub').textContent=THEMES[theme].sub;
+  const R=[-8,6,-4,9,-7,5,-6,7,-5,8,-9,4,-3,6]; // fixed tilts, no random drifting
+  const row=(el,from)=>{el.innerHTML=Array.from({length:7},(_,k)=>{const n=from+k;return `<span class="sp-st" style="--i:${n}"><img src="stickers/s${String(n+1).padStart(2,'0')}.webp" alt="" style="--r:${R[n]}deg"></span>`}).join('')};
+  row($('#sp-top'),0);row($('#sp-bot'),7);
+}
+function closeSplash(signIn){const sp=$('#splash');if(!sp||sp.classList.contains('out')||sp.classList.contains('gone'))return;sp.classList.add('out');
+  setTimeout(()=>{sp.classList.remove('out');sp.classList.add('gone');document.body.classList.remove('splash');window.scrollTo(0,0);
+    if(signIn&&!canEdit){showLogin=true;render();const l=$('#lp');if(l)l.focus()}},350)}
+// back to the welcome screen from the calendar (header button)
+function openSplash(){const sp=$('#splash');if(!sp)return;buildSplash();sp.classList.remove('gone','out');document.body.classList.add('splash');
+  const w=sp.querySelector('.sp-win');w.style.animation='none';void w.offsetWidth;w.style.animation='';
+  setTimeout(()=>$('#sp-go').focus({preventScroll:true}),800)}
+buildSplash();$('#sp-go').onclick=()=>closeSplash(true);$('#sp-home').onclick=()=>closeSplash(false);setTimeout(()=>$('#sp-go').focus({preventScroll:true}),800);
 (async()=>{
   const h=location.hash.match(/edit=([^&]+)/);
   try{if(h){localStorage.setItem('ek',decodeURIComponent(h[1]));history.replaceState(null,'',location.pathname+location.search)}editKey=localStorage.getItem('ek')||''}

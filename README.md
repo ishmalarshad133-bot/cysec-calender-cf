@@ -115,3 +115,9 @@ activate/check/release state machine, notes, the limiter, the admin endpoint, an
 
 `README.md`, `package.json` and `tests/` are not needed on the server. If you upload the whole folder
 they are just served as static files; you can leave them out of the upload.
+
+## Welcome screen
+
+`index.html` opens with a welcome window (logo, sticker rows, **Sign in** and **Go to home page**).
+The images live in `stickers/` (`logo.jpg`, `s01.webp` to `s14.webp`), so upload that folder with the site.
+The **← welcome** button in the calendar header brings the screen back. Sign in opens the editor password box.
