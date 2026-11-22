@@ -25,7 +25,7 @@ failure is `{ ok:false, error:<code> }`.
 | Endpoint | Behaviour |
 |----------|-----------|
 | `POST /api/app/activate` | verify key. Unbound -> binds it to this device. Bound to this device -> ok. Bound to another device -> `key_in_use` |
-| `POST /api/app/check` | same verify, never binds. Updates `lastSeenAt` at most once per hour. Returns `{ ok, bound, expiresAt }` |
+| `POST /api/app/check` | same verify, never binds. Updates `lastSeenAt` at most once per 24 hours. Returns `{ ok, bound, expiresAt }` |
 | `POST /api/app/release` | if the key is bound to this device, unbind it. Returns `{ ok, released }`. Works even for revoked/expired keys |
 | `GET /api/app/notes` | verify, then `{ ok:true, notes:[{ id?, name, url?, addedAt, size? }] }` built from the Files list (PDFs have `id`, links have `url`, `addedAt` is ms epoch) |
 
@@ -70,13 +70,13 @@ Status meanings: `unused` = never activated, `active` = bound to a device, `revo
   same key from different devices can both succeed. This is accepted.
 * KV is eventually consistent: a revoke/unbind can take up to about a minute to reach every
   Cloudflare location. A `check` that rewrites a record at the same instant as an admin change
-  could in theory overwrite it; the window is tiny and `check` only writes once per hour per key.
+  could in theory overwrite it; the window is tiny and `check` only writes once per 24 hours per key.
 
 ## Rate limiting
 
 Failed attempts (unknown/invalid app key, wrong edit key on `/api/keys`, wrong edit key on `/api`
 `auth`/`save`, and wrong edit key on `/api/upload`) are counted per IP (`cf-connecting-ip`) in KV key
-`rl:<ip>` with a 900 s TTL. After 10 failures the IP gets `rate_limited` (429) until the counter expires.
+`rl:<ip>` with a 900 s TTL. After 60 failures the IP gets `rate_limited` (429) until the counter expires.
 Refusals for a *valid* key (`revoked`, `expired`, `key_in_use`) are not counted.
 
 This limiter is **approximate** (KV is eventually consistent and read-modify-write is not atomic, so
@@ -90,10 +90,18 @@ a burst of parallel requests can slip through). Back it up with a Cloudflare WAF
 
 Many users behind one NAT (a campus network) share one IP and therefore one failure counter.
 
-## Free-plan note
+## Free-plan limits
 
-Free Workers plans cap the number of subrequests (KV calls) per request. `create` uses 2 + `count`
-KV calls, so on a free plan create at most ~45 keys per click; if a big batch errors, use a smaller count.
+* **KV writes: the free plan allows 1,000 writes per day** (across the whole account/namespace; reads
+  are 100,000 per day). Once it is used up, writes fail until the daily reset (00:00 UTC). Writes happen on:
+  saving the calendar, uploads, creating/revoking/deleting keys, each first `activate`/`release`, each
+  failed attempt (the rate-limit counter), and `check` when `lastSeenAt` is older than 24 hours. That
+  is why the `lastSeenAt` refresh interval is 24 hours: with the app calling `check` often, it costs at
+  most about one write per active key per day. For example 300 active keys use roughly 300 writes/day,
+  leaving the rest for edits and failures. The limiter's 60-failure cap is also a write budget: a
+  burst of bad guesses can burn up to 60 writes per IP per 15 minutes, so keep the WAF rule below in place.
+* Free Workers plans also cap the number of subrequests (KV calls) per request. `create` uses 2 + `count`
+  KV calls, so on a free plan create at most ~45 keys per click; if a big batch errors, use a smaller count.
 
 ## Tests
 

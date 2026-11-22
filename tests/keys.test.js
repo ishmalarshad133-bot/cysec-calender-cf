@@ -11,7 +11,7 @@ import { onRequest as uploadApi } from "../functions/api/upload.js";
 
 const DEV_A = "device-aaaaaaaaaaaaaaaa";
 const DEV_B = "device-bbbbbbbbbbbbbbbb";
-const HOUR = 3600000;
+const DAY = 86400000;
 
 const mkEnv = () => ({ KV: new FakeKV(), EDIT_KEY: "s3cret-edit-key" });
 const req = (method, headers = {}, body) =>
@@ -105,7 +105,7 @@ test("bad device id -> 400 bad_device (and does not count as a failed attempt)",
   assert.equal(await rlGet(env, "1.1.1.1"), 0);
 });
 
-test("check: does not bind; bound-to-other is refused; lastSeenAt updates at most hourly", async () => {
+test("check: does not bind; bound-to-other is refused; lastSeenAt updates at most daily", async () => {
   const env = mkEnv();
   const { key, id } = await seed(env);
   const T0 = 1_000_000_000_000;
@@ -116,11 +116,11 @@ test("check: does not bind; bound-to-other is refused; lastSeenAt updates at mos
   await app(env, "activate", key, DEV_A, "1.1.1.1", T0);
   r = await body(await app(env, "check", key, DEV_A, "1.1.1.1", T0 + 60_000));
   assert.deepEqual([r.ok, r.bound], [true, true]);
-  assert.equal((await env.KV.get("akey:" + id, "json")).lastSeenAt, T0); // < 1h: untouched
-  await app(env, "check", key, DEV_A, "1.1.1.1", T0 + HOUR);
-  assert.equal((await env.KV.get("akey:" + id, "json")).lastSeenAt, T0 + HOUR);
+  assert.equal((await env.KV.get("akey:" + id, "json")).lastSeenAt, T0); // < 24h: untouched
+  await app(env, "check", key, DEV_A, "1.1.1.1", T0 + DAY);
+  assert.equal((await env.KV.get("akey:" + id, "json")).lastSeenAt, T0 + DAY);
 
-  r = await body(await app(env, "check", key, DEV_B, "1.1.1.1", T0 + 2 * HOUR));
+  r = await body(await app(env, "check", key, DEV_B, "1.1.1.1", T0 + 2 * DAY));
   assert.deepEqual([r.status, r.error], [403, "key_in_use"]);
 });
 
@@ -165,7 +165,7 @@ test("wrong HTTP method -> 405 JSON", async () => {
   assert.equal(r2.status, 405);
 });
 
-test("limiter: counts failures per IP, blocks at 10 with 429, TTL 900s, expires", async () => {
+test("limiter: counts failures per IP, blocks at RL_MAX (60) with 429, TTL 900s, expires", async () => {
   const env = mkEnv();
   let t = 1_000_000;
   env.KV.now = () => t;
@@ -260,7 +260,7 @@ test("keys admin: validation, cap of 500, wrong edit key, rate limit", async () 
   const over = await admin(env2, { action: "create", label: "", count: 1, expiresAt: null });
   assert.deepEqual([over.status, over.error], [400, "limit_reached"]);
 
-  // wrong edit key -> 403, then blocked after 10
+  // wrong edit key -> 403, then blocked after RL_MAX
   const env3 = mkEnv();
   for (let i = 0; i < RL_MAX; i++) assert.equal((await admin(env3, { action: "list" }, "wrong", "3.3.3.3")).status, 403);
   const blocked = await admin(env3, { action: "list" }, "wrong", "3.3.3.3");
@@ -300,8 +300,8 @@ test("index.js: auth/save wrong key rate limited; auth contract unchanged", asyn
   const env = mkEnv();
   assert.deepEqual(await main(env, { action: "auth", key: env.EDIT_KEY }, "5.5.5.5"), { status: 200, cache: "no-store", ok: true });
   assert.equal((await main(env, { action: "auth", key: "nope" }, "5.5.5.5")).ok, false);
-  for (let i = 0; i < 8; i++) await main(env, { action: "save", key: "nope" }, "5.5.5.5");
-  assert.equal((await main(env, { action: "save", key: "nope" }, "5.5.5.5")).status, 403); // 10th failure
+  for (let i = 0; i < RL_MAX - 2; i++) await main(env, { action: "save", key: "nope" }, "5.5.5.5");
+  assert.equal((await main(env, { action: "save", key: "nope" }, "5.5.5.5")).status, 403); // RL_MAX-th failure
   const r = await main(env, { action: "auth", key: env.EDIT_KEY }, "5.5.5.5");
   assert.deepEqual([r.status, r.error], [429, "rate_limited"]);
   // votes are not limited / not touched

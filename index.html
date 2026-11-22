@@ -94,6 +94,10 @@ a.ab{display:inline-block;color:var(--g);border:1px solid var(--g2);border-radiu
 .prog{height:12px;border:1px solid var(--g2);border-radius:6px;overflow:hidden;margin:6px 0}.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--g2),var(--g));transition:width .6s}
 .done{text-decoration:line-through;opacity:.5}
 .poll{border-top:1px dashed var(--line);margin-top:12px;padding-top:10px}
+.tbl{width:100%;border-collapse:collapse;font-size:.85em;margin-top:8px}
+.tbl th,.tbl td{border-bottom:1px dashed var(--line);padding:5px 6px;text-align:left;vertical-align:top}
+.tbl th{color:var(--dim);font-weight:500}
+button:disabled{opacity:.45;cursor:default;transform:none;box-shadow:none}
 @media(max-width:600px){.d{min-height:56px;font-size:.66em}}
 @media(prefers-reduced-motion:reduce){.fl,.st,.cur,h1{animation:none}#rain{display:none}}
 </style>
@@ -160,6 +164,43 @@ async function load(force){
   try{const d=await (await fetch('/api',{cache:'no-store'})).json();const j=JSON.stringify(d);if(j===last&&!force)return;
     const a=document.activeElement;if(!force&&a&&['INPUT','SELECT','TEXTAREA'].includes(a.tagName))return;
     last=j;S={events:d.events||{},polls:d.polls||[],files:d.files||[]};votes=Object.entries(d.votes||{}).map(([k,v])=>({uid:k,...v}));render()}catch(e){}}
+// ---------- app keys (edit mode only) ----------
+const fmtD=t=>Number.isFinite(t)&&t>0?new Date(t).toLocaleString('en',{dateStyle:'medium',timeStyle:'short'}):'—';
+const fmtSize=n=>!Number.isFinite(n)?'':n<1024?n+' B':n<1048576?(n/1024).toFixed(1)+' KB':(n/1048576).toFixed(2)+' MB';
+const fileMeta=f=>{const p=[];if(Number.isFinite(f.addedAt)&&f.addedAt>0)p.push('added '+fmtD(f.addedAt));if(Number.isFinite(f.size))p.push(fmtSize(f.size));return p.length?`<br><span class="dim">${esc(p.join(' · '))}</span>`:''};
+const akNew=()=>({keys:null,loading:false,err:'',newKeys:'',form:{label:'',count:'1',exp:''}});
+let AK=akNew();
+async function akApi(body){const r=await fetch('/api/keys',{method:'POST',headers:{'Content-Type':'application/json','x-edit-key':editKey},body:JSON.stringify(body)});const d=await r.json().catch(()=>({}));if(!r.ok||!d.ok)throw new Error(d.error||r.status);return d}
+async function akLoad(){AK.loading=true;AK.err='';try{AK.keys=(await akApi({action:'list'})).keys}catch(e){AK.keys=AK.keys||[];AK.err='Could not load keys: '+e.message}AK.loading=false;render()}
+const akStatus=k=>k.revoked?'revoked':(k.expiresAt&&Date.now()>=k.expiresAt)?'expired':k.deviceBound?'active':'unused';
+function akBox(T){
+  const f=AK.form;
+  const rows=(AK.keys||[]).map(k=>`<tr><td>${esc(k.label||'—')}</td><td>${esc(akStatus(k))}${k.expiresAt?`<br><span class="dim">exp ${esc(fmtD(k.expiresAt))}</span>`:''}</td><td>${esc(fmtD(k.boundAt))}</td><td>${esc(fmtD(k.lastSeenAt))}</td><td style="white-space:nowrap">${k.revoked?`<button data-ak="unrevoke" data-id="${esc(k.id)}">Unrevoke</button>`:`<button data-ak="revoke" data-id="${esc(k.id)}">Revoke</button>`} <button data-ak="unbind" data-id="${esc(k.id)}" ${k.deviceBound?'':'disabled'}>Unbind device</button> <button class="x" data-ak="delete" data-id="${esc(k.id)}" data-label="${esc(k.label||'')}">Delete</button></td></tr>`).join('');
+  return `<section class="box"><b>${T.p}App keys 🔑</b>
+   <p class="dim">Keys unlock the Android app. Each key binds to one device. New keys are shown once, right after you create them.</p>
+   <div class="row"><input id="akl" placeholder="label (e.g. Class of 2026)" maxlength="60" value="${esc(f.label)}"><input id="akc" type="number" min="1" max="50" value="${esc(f.count)}" style="max-width:90px" title="how many keys"><input id="ake" type="date" value="${esc(f.exp)}" style="max-width:170px" title="optional expiry date"><button id="akm">+ create</button></div>
+   ${AK.newKeys?`<p class="dim">Copy these now. They will not be shown again.</p><textarea id="akt" readonly rows="${Math.min(10,AK.newKeys.split('\n').length+1)}" style="font-family:monospace">${esc(AK.newKeys)}</textarea><div class="row"><button id="akcp">Copy all</button><button id="akhd" class="x">I saved them, hide</button></div>`:''}
+   ${AK.err?`<p style="color:var(--pink)">${esc(AK.err)}</p>`:''}
+   ${AK.keys===null?'<p class="dim">loading…</p>':`<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>label</th><th>status</th><th>bound at</th><th>last seen</th><th></th></tr></thead><tbody>${rows||'<tr><td colspan="5" class="dim">no keys yet.</td></tr>'}</tbody></table></div>`}
+   <div class="row"><button id="akr">refresh</button></div></section>`}
+function akBind(){
+  if(AK.keys===null&&!AK.loading)akLoad();
+  if(!$('#akl'))return;
+  const f=AK.form;
+  $('#akl').oninput=e=>f.label=e.target.value;$('#akc').oninput=e=>f.count=e.target.value;$('#ake').oninput=e=>f.exp=e.target.value;
+  $('#akm').onclick=async()=>{
+    const count=parseInt(f.count,10);if(!(count>=1&&count<=50))return alert('Count must be 1 to 50.');
+    let exp=null;if(f.exp){const [y,m,d]=f.exp.split('-').map(Number);exp=new Date(y,m-1,d,23,59,59,999).getTime();if(!(exp>Date.now()))return alert('Expiry must be in the future.')}
+    const b=$('#akm');b.disabled=true;b.textContent='creating…';
+    try{const r=await akApi({action:'create',label:f.label.trim(),count,expiresAt:exp});AK.newKeys=r.keys.map(k=>k.key).join('\n');f.label='';f.count='1';f.exp='';await akLoad()}
+    catch(e){alert('Could not create keys: '+e.message);b.disabled=false;b.textContent='+ create'}};
+  document.querySelectorAll('[data-ak]').forEach(b=>b.onclick=async()=>{const a=b.dataset.ak;
+    if(a==='delete'&&!confirm('Delete this key'+(b.dataset.label?' ("'+b.dataset.label+'")':'')+'? Any app using it stops working.'))return;
+    try{await akApi({action:a,id:b.dataset.id});await akLoad()}catch(e){alert('Failed: '+e.message)}});
+  if($('#akcp')){$('#akcp').onclick=async()=>{try{await navigator.clipboard.writeText(AK.newKeys);$('#akcp').textContent='copied!'}catch(e){$('#akt').focus();$('#akt').select();alert('Press Ctrl+C to copy.')}};
+    $('#akhd').onclick=()=>{AK.newKeys='';render()}}
+  $('#akr').onclick=()=>akLoad();
+}
 // ---------- render ----------
 const CATS={Deadline:'🎀',Exam:'📚',Task:'🌱',Class:'☁️',Fun:'⭐'};
 let draft=null;
@@ -177,7 +218,7 @@ function render(){
   const up=Object.keys(S.events).filter(k=>k>=today).sort().flatMap(k=>S.events[k].map(e=>({k,...e}))).filter(e=>!e.done).slice(0,6);
   const pct=mt?Math.round(md/mt*100):0;
   const mine=votes.find(v=>v.uid===uid);
-  const filesHTML=S.files.length?S.files.map((f,i)=>f.url?`<div class="item" style="flex-wrap:wrap"><span>🔗 <b>${esc(f.name)}</b><br><span class="dim" style="word-break:break-all">${esc(f.url)}</span></span><span><a class="ab" href="${esc(f.url)}" target="_blank" rel="noopener noreferrer">open</a> <button data-cp="${esc(f.url)}">copy link</button>${canEdit?` <button class="x" data-df="${i}">rm</button>`:''}</span></div>`:`<div class="item" style="flex-wrap:wrap"><span>📄 <b>${esc(f.name)}</b><br><span class="dim" style="word-break:break-all">${location.origin+fileUrl(f)}</span></span><span><a class="ab" href="${fileUrl(f)}" target="_blank" rel="noopener">open</a> <button data-cp="${fileUrl(f)}">copy link</button> <a class="ab" href="${fileUrl(f)}?dl=1" download>download</a>${canEdit?` <button class="x" data-df="${i}">rm</button>`:''}</span></div>`).join(''):'<p class="dim">no files yet.</p>';
+  const filesHTML=S.files.length?S.files.map((f,i)=>f.url?`<div class="item" style="flex-wrap:wrap"><span>🔗 <b>${esc(f.name)}</b><br><span class="dim" style="word-break:break-all">${esc(f.url)}</span>${fileMeta(f)}</span><span><a class="ab" href="${esc(f.url)}" target="_blank" rel="noopener noreferrer">open</a> <button data-cp="${esc(f.url)}">copy link</button>${canEdit?` <button class="x" data-df="${i}">rm</button>`:''}</span></div>`:`<div class="item" style="flex-wrap:wrap"><span>📄 <b>${esc(f.name)}</b><br><span class="dim" style="word-break:break-all">${location.origin+fileUrl(f)}</span>${fileMeta(f)}</span><span><a class="ab" href="${fileUrl(f)}" target="_blank" rel="noopener">open</a> <button data-cp="${fileUrl(f)}">copy link</button> <a class="ab" href="${fileUrl(f)}?dl=1" download>download</a>${canEdit?` <button class="x" data-df="${i}">rm</button>`:''}</span></div>`).join(''):'<p class="dim">no files yet.</p>';
   const pollHTML=S.polls.map(p=>{const vs=votes.filter(v=>v.answers&&v.answers[p.id]);
     return `<div class="poll"><b>? ${esc(p.q)}</b>${canEdit?` <button class="x" data-dp="${p.id}">rm poll</button>`:''}
     ${p.opts.map(o=>{const c=vs.filter(v=>v.answers[p.id]===o).length;return `<button class="opt ${mine?.answers?.[p.id]===o?'me':''}" data-p="${p.id}" data-o="${esc(o)}"><i style="width:${vs.length?c/vs.length*100:0}%"></i>${esc(o)}<span>${c}</span></button>`}).join('')}
@@ -193,6 +234,7 @@ function render(){
    ${canEdit?`<div class="row"><select id="ec" style="flex:0 0 auto">${Object.entries(CATS).map(([k,v])=>`<option value="${k}">${v} ${k}</option>`).join('')}</select><input id="et" placeholder="title"><input id="tm" type="time" style="max-width:130px"><button id="add">+ add</button></div><div class="row"><input id="pf" type="file" accept="application/pdf,.pdf"><span class="dim" style="flex:2 1 160px">📎 optional PDF (max 5 MB)</span></div>`:''}</section>
   <section class="box"><b>${T.p}Coming up 🎀</b>${up.length?up.map(e=>`<div class="item"><span>${CATS[e.cat]||''} ${esc(e.title)}${fileBits(e)}</span><span class="dim">${e.k}${e.time?' '+esc(e.time):''}</span></div>`).join(''):'<p class="dim">all clear.</p>'}</section>
   <section class="box"><b>${T.p}Files 📁</b>${filesHTML}${canEdit?`<div class="row"><input id="ff" type="file" accept="application/pdf,.pdf"><button id="fu">upload</button></div><p class="dim">PDF only, max 5 MB. Each file gets its own direct link.</p><div class="row"><input id="ln" placeholder="link name (e.g. Networking notes)"><input id="lu" placeholder="https://drive.google.com/..."><button id="la">+ add link</button></div><p class="dim">Or add a link to a Drive file or folder. Set it to “Anyone with the link” in Drive.</p>`:''}</section>
+  ${canEdit?akBox(T):''}
   <section class="box"><b>${T.p}This month’s progress</b><div class="prog"><i style="width:${pct}%"></i></div><span class="dim">${md}/${mt} done (${pct}%)</span></section>
   <section class="box"><b>${T.p}POLLS</b>
    ${db?`<div class="row"><input id="nm" placeholder="your name (needed to vote)" maxlength="30" value="${esc(mine?.name||localStorageGet('nm'))}"></div>${pollHTML||'<p class="dim">no polls yet.</p>'}`:`<p class="dim">loading…</p>`}
@@ -201,7 +243,7 @@ function render(){
   $('#th').onchange=e=>{e.target.blur();applyTheme(e.target.value);render()};
   $('#cl').onclick=()=>{const on=document.body.classList.toggle('clear');try{localStorage.setItem('clear',on?'1':'0')}catch(e){}};
   if($('#lg'))$('#lg').onclick=()=>{showLogin=!showLogin;render();if($('#lp'))$('#lp').focus()};
-  if($('#lo'))$('#lo').onclick=()=>{try{localStorage.removeItem('ek')}catch(e){}editKey='';canEdit=false;render()};
+  if($('#lo'))$('#lo').onclick=()=>{try{localStorage.removeItem('ek')}catch(e){}editKey='';canEdit=false;AK=akNew();render()};
   if($('#lgo')){const go=async()=>{const k=$('#lp').value;if(!k)return;try{const r=await api({action:'auth',key:k});if(!r.ok)return alert('Wrong password.');editKey=k;canEdit=true;showLogin=false;try{localStorage.setItem('ek',k)}catch(e){}render()}catch(e){alert('Login failed: '+(e.message==='404'?'the server part is not deployed (functions folder missing)':e.message))}};$('#lgo').onclick=go;$('#lp').onkeydown=e=>{if(e.key==='Enter')go()}}
   $('#pv').onclick=()=>{cur.setMonth(m-1);render()};$('#nx').onclick=()=>{cur.setMonth(m+1);render()};
   document.querySelectorAll('.d[data-k]').forEach(el=>el.onclick=()=>{sel=el.dataset.k;render()});
@@ -214,6 +256,7 @@ function render(){
    $('#la').onclick=()=>{const n=$('#ln').value.trim(),u=$('#lu').value.trim();let ok=false;try{ok=/^https?:$/.test(new URL(u).protocol)}catch(e){}if(!n||!ok)return alert('Add a name and a full link starting with https://');S.files.push({name:n.slice(0,80),url:u});save()};
    $('#fu').onclick=async()=>{const f=$('#ff').files[0];if(!f)return alert('Choose a PDF first.');const b=$('#fu');b.disabled=true;b.textContent='uploading…';try{const file=await uploadPdf(f);S.files.push(file);await save()}catch(e){alert('Upload failed: '+e.message);b.disabled=false;b.textContent='upload'}};
    document.querySelectorAll('[data-df]').forEach(b=>b.onclick=()=>{S.files.splice(+b.dataset.df,1);save()});
+   akBind();
    $('#np').onclick=()=>{draft={q:'',opts:['','']};render()};
    if(draft){$('#dq').oninput=e=>draft.q=e.target.value;document.querySelectorAll('[data-do]').forEach(i=>i.oninput=e=>draft.opts[+i.dataset.do]=e.target.value);
     $('#ao').onclick=()=>{draft.opts.push('');render()};$('#cp').onclick=()=>{draft=null;render()};

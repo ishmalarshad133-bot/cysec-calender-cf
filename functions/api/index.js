@@ -1,4 +1,6 @@
 // /api  -> read (GET) and save/vote/auth (POST). Data lives in one KV key: "data".
+import { clientIp, rlGet, rlBlocked, rlFail } from "../_lib/common.js";
+
 const J = (o, s = 200) =>
   new Response(JSON.stringify(o), {
     status: s,
@@ -27,20 +29,41 @@ export async function onRequest({ request, env }) {
   let b;
   try { b = await request.json(); } catch { return J({ error: "bad request" }, 400); }
 
-  if (b.action === "auth") return J({ ok: okKey(env, b.key) });
+  // failed edit-key attempts are rate limited per IP (approximate, see README)
+  if (b.action === "auth" || b.action === "save") {
+    const ip = clientIp(request);
+    const fails = await rlGet(env, ip);
+    if (rlBlocked(fails)) return J({ error: "rate_limited" }, 429);
+    if (!okKey(env, b.key)) {
+      await rlFail(env, ip, fails);
+      return b.action === "auth" ? J({ ok: false }) : J({ error: "wrong edit key" }, 403);
+    }
+    if (b.action === "auth") return J({ ok: true });
+  }
 
   // editors only
   if (b.action === "save") {
-    if (!okKey(env, b.key)) return J({ error: "wrong edit key" }, 403);
     const events = b.events && typeof b.events === "object" ? b.events : {};
     const polls = Array.isArray(b.polls) ? b.polls.slice(0, 30) : [];
+    // addedAt is stamped by the server (kept from the previous save, never trusted from the client)
+    const prev = new Map(data.files.map((f) => [f.id ? "id:" + f.id : "url:" + f.url, f]));
+    const now = Date.now();
     const files = Array.isArray(b.files)
       ? b.files
           .map((f) => {
             if (!f || typeof f.name !== "string") return null;
             const name = f.name.slice(0, 80);
-            if (typeof f.id === "string" && /^[a-f0-9]{16}$/.test(f.id)) return { id: f.id, name };
-            if (typeof f.url === "string" && f.url.length <= 2000 && /^https?:\/\//i.test(f.url)) return { name, url: f.url };
+            if (typeof f.id === "string" && /^[a-f0-9]{16}$/.test(f.id)) {
+              const old = prev.get("id:" + f.id);
+              const out = { id: f.id, name, addedAt: old?.addedAt || now };
+              const size = Number.isFinite(f.size) && f.size >= 0 && f.size <= 5242880 ? Math.floor(f.size) : old?.size;
+              if (Number.isFinite(size)) out.size = size;
+              return out;
+            }
+            if (typeof f.url === "string" && f.url.length <= 2000 && /^https?:\/\//i.test(f.url)) {
+              const old = prev.get("url:" + f.url);
+              return { name, url: f.url, addedAt: old?.addedAt || now };
+            }
             return null;
           })
           .filter(Boolean)
